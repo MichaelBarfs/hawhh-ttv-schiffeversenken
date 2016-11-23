@@ -29,8 +29,10 @@ package de.uniba.wiai.lspi.chord.service.impl;
 
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.DEBUG;
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.INFO;
+import hawhh.ttv.meth.schiffeversenken.TransactionHelper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -1116,7 +1118,14 @@ public final class ChordImpl implements Chord, Report, AsynChord {
 	@Override
 	public void broadcast (ID target, Boolean hit) {
 		this.logger.debug("App called broadcast");
-		
+
+		//send to own node with own id as range.
+		try {
+			localNode.broadcast(new Broadcast(getID(), getID(), target, TransactionHelper.transactionNumber+1, hit));
+		} catch (CommunicationException e1) {
+			//if failes ignore it...
+			e1.printStackTrace();
+		}
 	}
 	
 	public void setCallback (NotifyCallback callback) {
