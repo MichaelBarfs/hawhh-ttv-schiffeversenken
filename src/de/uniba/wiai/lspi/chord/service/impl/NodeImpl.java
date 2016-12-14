@@ -29,7 +29,7 @@ package de.uniba.wiai.lspi.chord.service.impl;
 
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.DEBUG;
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.INFO;
-import hawhh.ttv.meth.schiffeversenken.TransactionHelper;
+import hawhh.ttv.meth.schiffeversenken.gamelogic.TransactionHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -482,12 +482,12 @@ public final class NodeImpl extends Node {
 			Integer transaction = TransactionHelper.transactionNumber;
 
 			// create broadcast.
-			Broadcast sendInfo = new Broadcast(range, source, info.getTarget(), info.getTransaction(),
+			Broadcast sendInfo = new Broadcast(range, source, info.getTarget(), transaction,
 					info.getHit());
 
 			// send broadcast
 			try {
-				currentNode.broadcast(info);
+				currentNode.broadcast(sendInfo);
 			} catch (CommunicationException e) {
 				// TODO what todo if java rmi fails?
 				// at the moment ignore it maybe node is crashed?

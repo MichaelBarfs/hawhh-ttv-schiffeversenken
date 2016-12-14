@@ -29,7 +29,7 @@ package de.uniba.wiai.lspi.chord.service.impl;
 
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.DEBUG;
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.INFO;
-import hawhh.ttv.meth.schiffeversenken.TransactionHelper;
+import hawhh.ttv.meth.schiffeversenken.gamelogic.TransactionHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
