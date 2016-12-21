@@ -1,5 +1,6 @@
 package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
@@ -31,7 +32,7 @@ public class Game implements NotifyCallback {
 	
 	private History history = new History();
 	
-	private Battleship battleship = new Battleship();
+	private Battleship battleship;
 	private MyPlayer myPlayer;
 	
 	// Server Constructor
@@ -108,8 +109,12 @@ public class Game implements NotifyCallback {
 	}
 
 	private boolean startGame() {
-		battleship = new Battleship();
-		myPlayer = new MyPlayer();
+		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger()
+				.add(BigInteger.valueOf(1)));
+		ID end = chord.getID();
+		myPlayer = new MyPlayer(start, end);
+		
+		battleship = new Battleship(myPlayer);
 		
 		return true;
 	}
@@ -117,7 +122,7 @@ public class Game implements NotifyCallback {
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit) {
 		// save this to history!
-		history.addEvent(source, target, hit, TransactionHelper.transactionNumber);
+		battleship.notify(Battleship.Event.BROADCAST, source, target, hit, TransactionHelper.transactionNumber);
 		if (hit) {
 			logger.info(String.format("############### %s hit by %s",
 					target.toDecimalString(), source.toDecimalString()));
