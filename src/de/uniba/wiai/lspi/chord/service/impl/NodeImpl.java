@@ -433,7 +433,6 @@ public final class NodeImpl extends Node {
 		return this.asyncExecutor;
 	}
 
-	// TODO: implement this function in TTP
 	@Override
 	public final void broadcast(Broadcast info) throws CommunicationException {
 		if (this.logger.isEnabledFor(DEBUG)) {

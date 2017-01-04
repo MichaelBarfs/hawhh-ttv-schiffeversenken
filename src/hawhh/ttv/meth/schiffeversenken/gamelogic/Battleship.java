@@ -97,7 +97,7 @@ public class Battleship {
 		GameEvent gameEvent = new GameEvent(event, source, target, hit, transactionNumber);
 		gameEvents.add(gameEvent);
 		addEnemy(source);
-		log.warn("New event: " + gameEvent);
+		log.info("New event: " + gameEvent);
 		checkEnemiesAlive();
 	}
 
@@ -106,10 +106,9 @@ public class Battleship {
 	 */
 	private void checkEnemiesAlive() {
 		for (EnemyPlayer enemyPlayer : enemies) {
-			if(enemyPlayer.isAlive()){
-				for (int i = 0; i < 10; i++)
-					log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
-					JOptionPane.showInputDialog("##### " + enemyPlayer.getEndId() + " is dead!");	
+			if(!enemyPlayer.isAlive()){
+				log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
+				JOptionPane.showInputDialog("##### " + enemyPlayer.getEndId() + " is dead!");	
 			}
 		}
 		

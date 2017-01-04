@@ -1,5 +1,9 @@
 package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
+import javax.swing.JOptionPane;
+
+import org.apache.log4j.Logger;
+
 import de.uniba.wiai.lspi.chord.data.ID;
 
 /**
@@ -9,6 +13,8 @@ import de.uniba.wiai.lspi.chord.data.ID;
  */
 public class MyPlayer extends Player {
 
+	private Logger logger = Logger.getLogger(MyPlayer.class);
+	
 	public MyPlayer(ID startId, ID endId) {
 		super(startId, endId);
 		fillShips();
@@ -39,11 +45,17 @@ public class MyPlayer extends Player {
 		if(sector == null){
 			return false;
 		}
+
+		if(!isAlive()){
+			logger.info(getEndId().toHexString() + ": I am already dead :(");
+		}
+		
 		if(sector.isAlive()){
 			shipCount--;
 			ret = true;
 		}
 		sector.setHit(true);
+		
 		return ret;
 	}
 

@@ -142,7 +142,7 @@ public class Game implements NotifyCallback {
 		// save this to history!
 		battleship.notify(GameEvent.EventType.BROADCAST, source, target, hit, TransactionHelper.transactionNumber);
 		if (hit) {
-			logger.warn(String.format("############### %s hit at %s", source.toDecimalString(),
+			logger.warn(String.format("%s hit at %s", source.toDecimalString(),
 					target.toDecimalString()));
 		}
 	}
