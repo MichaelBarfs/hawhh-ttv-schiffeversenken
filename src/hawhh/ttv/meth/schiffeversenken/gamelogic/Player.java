@@ -114,8 +114,7 @@ public abstract class Player implements Comparable<Player> {
 	}
 
 	/**
-	 * To be implemented by enemies and own player, initializes ship locations
-	 * in the sectors list.
+	 * Initializes the Sectors for a start id and end id and the given length. 
 	 */
 	private void initSectors() {
 		// get total size
@@ -129,5 +128,9 @@ public abstract class Player implements Comparable<Player> {
 			sectors.add(new Sector(start,end));
 		}
 		
+	}
+
+	public boolean isAlive() {
+		return shipCount>0;
 	}
 }

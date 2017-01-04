@@ -29,10 +29,10 @@ public class AsyncBroadcast implements Runnable {
 			chord.broadcast(target, hit);
 		}
 		
-		ID t = battleship.getNextTarget();
+		ID target = battleship.getNextTarget();
 		
 		try {
-			chord.retrieve(t);
+			chord.retrieve(target);
 		} catch (ServiceException e) {
 			logger.fatal(e);
 		}

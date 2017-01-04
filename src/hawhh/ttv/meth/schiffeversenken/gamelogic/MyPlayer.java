@@ -2,6 +2,11 @@ package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
+/**
+ * MyPlayer manages all data of our ship states. It holds the ship positions and checks if we were hit or not.
+ * @author abf902
+ *
+ */
 public class MyPlayer extends Player {
 
 	public MyPlayer(ID startId, ID endId) {
@@ -9,6 +14,9 @@ public class MyPlayer extends Player {
 		fillShips();
 	}
 
+	/**
+	 * fill the ship list SHIP_COUNT ships at random ship positions.
+	 */
 	private void fillShips() {
 		for (int i = 0; i < SHIP_COUNT; i++) {
 			//get Random position
@@ -20,6 +28,11 @@ public class MyPlayer extends Player {
 		}
 	}
 
+	/**
+	 * check if a ship has been hit at target id.
+	 * @param target	the id that was shot at.
+	 * @return
+	 */
 	public boolean checkHit(ID target) {
 		boolean ret = false;
 		Sector sector = getContainingSector(target);

@@ -108,7 +108,10 @@ public class Game implements NotifyCallback {
 		new Thread(new AsyncBroadcast(chord,target,hit, battleship, logger)).start();			
 	}
 
-	private boolean startGame() {
+	public boolean startGame() {
+		if(isStarted){
+			return true;
+		}
 		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger()
 				.add(BigInteger.valueOf(1)));
 		ID end = chord.getID();
@@ -116,16 +119,25 @@ public class Game implements NotifyCallback {
 		
 		battleship = new Battleship(myPlayer);
 		
+		if (myPlayer.hasMaxID()) {
+			logger.info(chord.getID() + " has 2^160-1");
+			retrieved(null);
+		}
+		
 		return true;
 	}
 
+	public String getChordId() {
+		return chord.getID().toString();
+	}
+	
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit) {
 		// save this to history!
-		battleship.notify(Battleship.Event.BROADCAST, source, target, hit, TransactionHelper.transactionNumber);
+		battleship.notify(GameEvent.EventType.BROADCAST, source, target, hit, TransactionHelper.transactionNumber);
 		if (hit) {
-			logger.info(String.format("############### %s hit by %s",
-					target.toDecimalString(), source.toDecimalString()));
+			logger.info(String.format("############### %s hit at %s", source.toDecimalString(),
+					target.toDecimalString()));
 		}
 	}
 
