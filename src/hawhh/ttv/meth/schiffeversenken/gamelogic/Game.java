@@ -3,6 +3,8 @@ package hawhh.ttv.meth.schiffeversenken.gamelogic;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
@@ -28,7 +30,7 @@ public class Game implements NotifyCallback {
 
 	private boolean isClient;
 
-	private boolean isStarted;
+	private boolean isStarted = false;
 	
 	private History history = new History();
 	
@@ -69,7 +71,7 @@ public class Game implements NotifyCallback {
 				throw new RuntimeException(
 						"Game as Client: Could not join the DHT !", e);
 			}
-			logger.info("Node as Client: init done");
+			logger.warn("Node as Client: init done");
 		} else {
 			// create server
 			try {
@@ -78,7 +80,7 @@ public class Game implements NotifyCallback {
 				throw new RuntimeException(
 						"Game as Server: Could not create the DHT !", e);
 			}
-			logger.info("Node as Server: init done");
+			logger.warn("Node as Server: init done");
 		}
 	}
 
@@ -113,13 +115,18 @@ public class Game implements NotifyCallback {
 		}
 		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger()
 				.add(BigInteger.valueOf(1)));
+		logger.warn("start id: " + start.toDecimalString());
 		ID end = chord.getID();
+		logger.warn("end id: " + end.toDecimalString());
 		myPlayer = new MyPlayer(start, end);
+		logger.warn(myPlayer);
 		
 		battleship = new Battleship(myPlayer);
+		isStarted = true;
 		
 		if (myPlayer.hasMaxID()) {
-			logger.info(chord.getID() + " has 2^160-1");
+			logger.warn(chord.getID() + " has 2^160-1");
+			JOptionPane.showInputDialog("START!");
 			retrieved(null);
 		}
 		
@@ -135,7 +142,7 @@ public class Game implements NotifyCallback {
 		// save this to history!
 		battleship.notify(GameEvent.EventType.BROADCAST, source, target, hit, TransactionHelper.transactionNumber);
 		if (hit) {
-			logger.info(String.format("############### %s hit at %s", source.toDecimalString(),
+			logger.warn(String.format("############### %s hit at %s", source.toDecimalString(),
 					target.toDecimalString()));
 		}
 	}

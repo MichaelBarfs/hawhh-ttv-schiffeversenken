@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 
 public class StartUp {
 	private static Logger log = Logger.getLogger(StartUp.class);
@@ -16,18 +17,18 @@ public class StartUp {
 			String serverPort, int nodeCount, boolean isServer) throws MalformedURLException{
 		if(isServer){
 			//startup as server
-			log.info("Starting server node");
+			log.warn("Starting server node");
 			Game server = new Game(serverAddress, serverPort);
 			nodes.add(server);
 		}
-		log.info("Starting additional " + nodeCount + " nodes.");
+		log.warn("Starting additional " + nodeCount + " nodes.");
 		for (int i = 0; i < nodeCount; i++) {
 			int portNumber = Integer.parseInt(localPort) + i;
 			String port = "" + portNumber;
 			Game node = new Game(localAddress,port,serverAddress,serverPort,true);
 			nodes.add(node);
 		}
-		log.info("Startup finished.");
+		log.warn("Startup finished.");
 	}
 
 
@@ -41,12 +42,12 @@ public class StartUp {
 	}
 	
 	public void startGame() {
-		log.info("starting Game in");
+		log.warn("starting Game in");
 
 		try {
 			//Count Down before game start.
 			for (int i = 3; i > 0; i--) {
-				log.debug(i);
+				log.warn(i);
 				Thread.sleep(1000);
 			}
 		} catch (InterruptedException e) {

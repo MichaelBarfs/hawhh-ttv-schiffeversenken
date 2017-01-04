@@ -62,7 +62,7 @@ public class UserInterface {
 		broadcastBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				logger.info("init game");
+				logger.warn("init game");
 				try {
 					s = new StartUp(locAdr.getText(), port.getText(), adr.getText(), port.getText(), Integer.parseInt(nodes.getText()), isServer.getState());
 				} catch (Exception e) {

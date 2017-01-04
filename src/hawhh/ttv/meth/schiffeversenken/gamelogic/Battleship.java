@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
@@ -54,7 +56,8 @@ public class Battleship {
 		
 		if(target == null){
 			for (int i = 0; i < 10; i++)
-				log.info("WINNER!!!!!" + weakest.getEndId() + " is dead!");
+				log.warn("WINNER!!!!!" + weakest.getEndId() + " is dead!");
+				JOptionPane.showInputDialog("WINNER!!!!!" + weakest.getEndId() + " is dead!");
 			target = weakest.getEndId();
 			try {
 				Thread.sleep(10000);
@@ -94,7 +97,7 @@ public class Battleship {
 		GameEvent gameEvent = new GameEvent(event, source, target, hit, transactionNumber);
 		gameEvents.add(gameEvent);
 		addEnemy(source);
-		log.info("New event: " + gameEvent);
+		log.warn("New event: " + gameEvent);
 		checkEnemiesAlive();
 	}
 
@@ -105,7 +108,8 @@ public class Battleship {
 		for (EnemyPlayer enemyPlayer : enemies) {
 			if(enemyPlayer.isAlive()){
 				for (int i = 0; i < 10; i++)
-					log.info("##### " + enemyPlayer.getEndId() + " is dead!");
+					log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
+					JOptionPane.showInputDialog("##### " + enemyPlayer.getEndId() + " is dead!");	
 			}
 		}
 		

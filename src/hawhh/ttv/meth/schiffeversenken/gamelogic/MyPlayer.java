@@ -23,7 +23,7 @@ public class MyPlayer extends Player {
 			int random = 0;
 			do {
 				random = (int) (Math.random() * INTERVAL_LENGTH);
-			} while (!sectors.get(random).isShip());
+			} while (sectors.get(random).isShip());
 			sectors.get(random).setShip(true);			
 		}
 	}
