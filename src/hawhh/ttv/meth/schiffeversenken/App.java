@@ -4,10 +4,14 @@ import java.net.MalformedURLException;
 
 import javax.swing.JOptionPane;
 
+import hawhh.ttv.meth.schiffeversenken.gamelogic.CoapLEDHelper;
+import hawhh.ttv.meth.schiffeversenken.gamelogic.CoapLEDHelper.Color;
 import hawhh.ttv.meth.schiffeversenken.gamelogic.StartUp;
 import hawhh.ttv.meth.schiffeversenken.gamelogic.UserInterface;
 
 import org.apache.log4j.Logger;
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 
 public class App{
@@ -24,6 +28,10 @@ public class App{
 
 		//load chord properties
 		de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
+		
+		CoapLEDHelper coapHelper = new CoapLEDHelper("coap://0.0.0.0/0.0.0.0:5683/RGB-LED/");
+		coapHelper.setLED(Color.RED);
+		
 		
 		String locAddr = JOptionPane.showInputDialog("Enter local address: (nothing = default)");
 		if(locAddr.equals("")){
@@ -65,6 +73,7 @@ public class App{
 			while(!go.equals("go")){
 				go = JOptionPane.showInputDialog("Type go to start");
 			}
+			coapHelper.setLED(Color.GREEN);
 			starter.startGame();
 			
 		} catch (MalformedURLException e) {
@@ -73,4 +82,5 @@ public class App{
 		}
 		
 	}
+	
 }

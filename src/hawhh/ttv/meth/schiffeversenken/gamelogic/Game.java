@@ -32,8 +32,6 @@ public class Game implements NotifyCallback {
 
 	private boolean isStarted = false;
 	
-	private History history = new History();
-	
 	private Battleship battleship;
 	private MyPlayer myPlayer;
 	

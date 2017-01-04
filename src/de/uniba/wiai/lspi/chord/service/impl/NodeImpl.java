@@ -468,25 +468,9 @@ public final class NodeImpl extends Node {
 			currentNode = fingerTable.get(i);
 			nextNode = fingerTable.get((i + 1) % fingerTable.size());
 
-			// set broadcast info.
-			ID range;
-			if (i + 1 == fingerTable.size()) {
-				// i am the limit
-				range = impl.getID(); // is this the correct id?
-			} else {
-				// next node is the limit.
-				range = nextNode.getNodeID();
-			}
-			ID source = impl.getID();
-			Integer transaction = TransactionHelper.transactionNumber;
-
-			// create broadcast.
-			Broadcast sendInfo = new Broadcast(range, source, info.getTarget(), transaction,
-					info.getHit());
-
 			// send broadcast
 			try {
-				currentNode.broadcast(sendInfo);
+				currentNode.broadcast(info);
 			} catch (CommunicationException e) {
 				// TODO what todo if java rmi fails?
 				// at the moment ignore it maybe node is crashed?
