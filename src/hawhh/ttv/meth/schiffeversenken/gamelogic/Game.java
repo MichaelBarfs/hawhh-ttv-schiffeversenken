@@ -43,7 +43,6 @@ public class Game implements NotifyCallback {
 
 	public Game(String localAddress, String localPort, String serverAddress,
 			String serverPort, boolean isClient) throws MalformedURLException {
-		PropertiesLoader.loadPropertyFile();
 
 		// set local address
 		this.localAddress = localAddress;
