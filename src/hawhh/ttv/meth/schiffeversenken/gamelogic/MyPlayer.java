@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
+import hawhh.ttv.meth.schiffeversenken.gamelogic.CoapLEDHelper.Color;
 
 /**
  * MyPlayer manages all data of our ship states. It holds the ship positions and checks if we were hit or not.
@@ -17,7 +18,25 @@ public class MyPlayer extends Player {
 	
 	public MyPlayer(ID startId, ID endId) {
 		super(startId, endId);
+		setShipCount(SHIP_COUNT);
 		fillShips();
+	}
+
+	private void setShipCount(int shipCount) {
+		this.shipCount = shipCount;
+		if(shipCount == SHIP_COUNT){
+			//LED green
+			CoapLEDHelper.getInstance().setLED(Color.GREEN);
+		} else if (shipCount < 10 && shipCount > 5){
+			//LED blau
+			CoapLEDHelper.getInstance().setLED(Color.BLUE);
+		} else if (shipCount <= 5 && shipCount > 0){
+			//LED pink
+			CoapLEDHelper.getInstance().setLED(Color.PINK);
+		} else {
+			//LED red
+			CoapLEDHelper.getInstance().setLED(Color.RED);
+		}
 	}
 
 	/**
@@ -51,7 +70,7 @@ public class MyPlayer extends Player {
 		}
 		
 		if(sector.isAlive()){
-			shipCount--;
+			setShipCount(getShipCount()-1);;
 			ret = true;
 		}
 		sector.setHit(true);

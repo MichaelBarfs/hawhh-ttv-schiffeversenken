@@ -1,24 +1,44 @@
 package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
 import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
+import org.eclipse.californium.core.network.CoapEndpoint;
 
 public class CoapLEDHelper {
 	
-	private String uri;
-	CoapClient client = new CoapClient();
+	private CoapLEDHelper() {
+		//endpoint = new CoapEndpoint(17000);
+		client = new CoapClient();
+		//client.setEndpoint(endpoint);
+	}
+	
+	public static CoapLEDHelper getInstance (){
+		if (instance == null){
+			instance = new CoapLEDHelper();
+		}
+		return instance;
+	}
+	
+	private static CoapLEDHelper instance;
+	
+	private String uri = "";
+	private CoapClient client;
+	//private CoapEndpoint endpoint;
 	
 	public enum Color{
 		RED, GREEN, BLUE, PINK
 	}
 	
-	public CoapLEDHelper(String uri) {
+	public void setURI(String uri){
 		this.uri = uri;
 		client.setURI(uri);
 	}
 	
 	public void setLED(Color color){
-		
+		if(uri.equals("")){
+			return;
+		}
 		
 		client.put("0", MediaTypeRegistry.TEXT_PLAIN);
 		switch(color){

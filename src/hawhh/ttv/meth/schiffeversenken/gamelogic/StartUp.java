@@ -11,6 +11,7 @@ public class StartUp {
 	private static Logger log = Logger.getLogger(StartUp.class);
 	private List<Game> nodes = new ArrayList<>();
 
+	public static boolean go = false;
 	
 	
 	public StartUp(String localAddress, String localPort, String serverAddress,
