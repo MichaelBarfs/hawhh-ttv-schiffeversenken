@@ -1,7 +1,5 @@
 package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
-import javax.swing.JOptionPane;
-
 import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
@@ -18,10 +16,16 @@ public class MyPlayer extends Player {
 	
 	public MyPlayer(ID startId, ID endId) {
 		super(startId, endId);
+		//set number of availabe ships
 		setShipCount(SHIP_COUNT);
+		//place ships in sectors
 		fillShips();
 	}
 
+	/**
+	 * set shipcount and paint LED 
+	 * @param shipCount
+	 */
 	private void setShipCount(int shipCount) {
 		this.shipCount = shipCount;
 		if(shipCount == SHIP_COUNT){
@@ -47,8 +51,10 @@ public class MyPlayer extends Player {
 			//get Random position
 			int random = 0;
 			do {
+				//do until a sector has no ship
 				random = (int) (Math.random() * INTERVAL_LENGTH);
 			} while (sectors.get(random).isShip());
+			//place ship in sector
 			sectors.get(random).setShip(true);			
 		}
 	}
@@ -60,19 +66,26 @@ public class MyPlayer extends Player {
 	 */
 	public boolean checkHit(ID target) {
 		boolean ret = false;
+		//check contain the target id
 		Sector sector = getContainingSector(target);
 		if(sector == null){
 			return false;
 		}
 
+		
 		if(!isAlive()){
 			logger.info(getEndId().toHexString() + ": I am already dead :(");
 		}
 		
+		//check if sector has a ship
 		if(sector.isAlive()){
 			setShipCount(getShipCount()-1);;
+			if(!isAlive()){
+				logger.info(getEndId().toHexString() + ": I am dead :(");
+			}
 			ret = true;
 		}
+		//set sector has been hit
 		sector.setHit(true);
 		
 		return ret;

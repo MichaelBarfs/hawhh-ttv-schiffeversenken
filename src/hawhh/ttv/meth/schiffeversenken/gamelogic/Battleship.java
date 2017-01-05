@@ -14,19 +14,44 @@ import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
+/**
+ * Main Class to manage Players.
+ * @author Timo Haeckel
+ *
+ */
 public class Battleship {
 	
 	private Logger log = Logger.getLogger(Battleship.class);
 	
+	/**
+	 * list of known enemies.
+	 */
 	private List<EnemyPlayer> enemies = new ArrayList<>();
 	
+	/**
+	 * Event History.
+	 */
 	private List<GameEvent> gameEvents = new ArrayList<>();
 	
+	/**
+	 * list of known enemy ids.
+	 */
 	private Set<ID> enemyIDs = new HashSet<>();
 
+	/**
+	 * My own player and ships.
+	 */
 	private MyPlayer myPlayer;
 
-	private ID ownID; 
+	/**
+	 * id of our player.
+	 */
+	private ID ownID;
+
+	/**
+	 * last target that we shot at. to check if WE got a hit.
+	 */
+	private ID lastTarget; 
 	
 	public Battleship(MyPlayer myPlayer) {
 		this.myPlayer = myPlayer;
@@ -45,6 +70,8 @@ public class Battleship {
 			//if no enemies known we need a random target
 			return getRandomTarget();
 		}
+		
+		//detect weakest target
 		EnemyPlayer weakest = enemies.get(0);
 		for (EnemyPlayer enemyPlayer : enemies) {
 			if(enemyPlayer.getShipCount() < weakest.getShipCount()){
@@ -52,12 +79,12 @@ public class Battleship {
 			}
 		}
 		
+		//get target id to shoot at weakest target.
 		target = weakest.getNextTargetID();
 		
+		// if no target id given the enemy is allready dead.
 		if(target == null){
-			for (int i = 0; i < 10; i++)
-				log.warn("WINNER!!!!!" + weakest.getEndId() + " is dead!");
-				JOptionPane.showInputDialog("WINNER!!!!!" + weakest.getEndId() + " is dead!");
+			log.warn("#####" + weakest.getEndId() + " is allready dead!");
 			target = weakest.getEndId();
 			try {
 				Thread.sleep(10000);
@@ -65,10 +92,17 @@ public class Battleship {
 				e.printStackTrace();
 			}
 		}
+		
+		//save last target
+		this.lastTarget = target;
 
 		return target;
 	}
 
+	/**
+	 * Calculate a random target that is not in my players range.
+	 * @return
+	 */
 	private ID getRandomTarget() {
 		Random rnd = new Random();
 		ID id = null;
@@ -79,6 +113,7 @@ public class Battleship {
 		return id;
 	}
 
+	//get all known enemies
 	public List<EnemyPlayer> getEnemies() {
 		return enemies;
 	}
@@ -94,10 +129,31 @@ public class Battleship {
 	public void notify(GameEvent.EventType event, ID source, ID target, Boolean hit,
 			int transactionNumber) {
 		
+		//check winning condition!
+		if(target.equals(lastTarget) && hit){
+			//we got a hit
+			log.warn("I GOT ONE!");
+
+			for (EnemyPlayer enemyPlayer : enemies) {
+				//find player we hit.
+				boolean isTarget = enemyPlayer.containsID(lastTarget);
+				if(isTarget){
+					//check if he is dead now
+					if(enemyPlayer.getShipCount() <= 1){
+						//WE ARE THE WINNER YEEEAAAH
+						log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
+						JOptionPane.showInputDialog("WINNER!!! " + enemyPlayer.getEndId() + " is dead!");
+					}
+				}
+			}
+		}
+		
+		//save game event to history
 		GameEvent gameEvent = new GameEvent(event, source, target, hit, transactionNumber);
 		gameEvents.add(gameEvent);
+		//add the enemy id to our list and update the enemies
 		addEnemy(source);
-		log.info("New event: " + gameEvent);
+		//check if all enemies are still alive
 		checkEnemiesAlive();
 	}
 
@@ -108,7 +164,6 @@ public class Battleship {
 		for (EnemyPlayer enemyPlayer : enemies) {
 			if(!enemyPlayer.isAlive()){
 				log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
-				JOptionPane.showInputDialog("##### " + enemyPlayer.getEndId() + " is dead!");	
 			}
 		}
 		
@@ -120,6 +175,7 @@ public class Battleship {
 	 * @param source 	enemy id
 	 */
 	private void addEnemy(ID source) {
+		//add all enemies except our own id.
 		if(!source.equals(ownID)) {
 			enemyIDs.add(source);
 			updateEnemies();
@@ -131,19 +187,29 @@ public class Battleship {
 	 * Update enemies.
 	 */
 	private void updateEnemies() {
+		//get sorted ids
 		List<ID> sortedIds = getEnemyIds();
+		//add our own
 		sortedIds.add(ownID);
+		//sort it again
 		Collections.sort(sortedIds);
+		
+		//clear alle enemies
 		enemies.clear();
 		
+		//go threw the list 
 		for (int i=0; i < sortedIds.size(); i++){
+			//get start id (predecessor id + 1)
 			ID startID = sortedIds.get((i - 1 + sortedIds.size()) % sortedIds.size()); // get predecessor
-			
 			startID = ID.valueOf(startID.toBigInteger().add(BigInteger.valueOf(1)));
+			//get end id
 			ID endID = sortedIds.get(i);
+			//check if it is an enemy and not ourself
 			if(!endID.equals(ownID)) {
+				//create a new enemy
 				EnemyPlayer enemy = new EnemyPlayer(startID, endID);
 				enemies.add(enemy);
+				//apply all game events to the new enemy
 				for (GameEvent gameEvent : gameEvents) {
 					enemy.checkHit(gameEvent);
 				}

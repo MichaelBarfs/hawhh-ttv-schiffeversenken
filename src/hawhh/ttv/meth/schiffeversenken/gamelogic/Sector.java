@@ -2,11 +2,26 @@ package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
+/**
+ * Sector data class
+ * @author Timo Haeckel
+ *
+ */
 public class Sector {
 
+	/**
+	 * sector contains ship
+	 */
 	private boolean ship = false;
+	
+	/**
+	 * sector has been hit
+	 */
 	private boolean hit = false;
 	
+	/**
+	 * Sector interval
+	 */
 	private ID startId;
 	private ID endId;
 

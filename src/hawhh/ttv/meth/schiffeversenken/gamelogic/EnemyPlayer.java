@@ -4,7 +4,11 @@ import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
-
+/**
+ * Class for enemy players
+ * @author Timo Haeckel
+ *
+ */
 public class EnemyPlayer extends Player {
 	private Logger logger = Logger.getLogger(EnemyPlayer.class);
 	
@@ -22,12 +26,13 @@ public class EnemyPlayer extends Player {
 		if(sector == null){
 			return;
 		}
-		//apply event
+		//apply event to enemy data
 		sector.setShip(event.hit);
 		sector.setHit(true);
+		//if hit count down the ships for this enemy
 		if(event.hit){
 			shipCount--;
-			logger.warn("Enemy " + getEndId().toHexString() + " hit " + (SHIP_COUNT - shipCount) + " recognized at " + event.target.toHexString() + ".");
+			logger.info("Enemy " + getEndId().toHexString() + " hit " + (SHIP_COUNT - shipCount) + " recognized at " + event.target.toHexString() + ".");
 		}
 	}
 
@@ -36,10 +41,11 @@ public class EnemyPlayer extends Player {
 	 * @return target id. Null if no target left.
 	 */
 	public ID getNextTargetID() {
+		//check if player still have ships left
 		if(shipCount <= 0){
 			return null;
 		}
-		
+		//search for a sector which not has been hit yet
 		for (Sector sector : sectors) {
 			if(!sector.isHit()){
 				return sector.getEndId();

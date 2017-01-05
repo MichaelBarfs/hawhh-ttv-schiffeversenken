@@ -2,12 +2,25 @@ package hawhh.ttv.meth.schiffeversenken.gamelogic;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
+/**
+ * class contains events for shooting
+ * @author Timo Haeckel
+ *
+ */
 public class GameEvent {
 	
+	/**
+	 * Enum for eventtypes
+	 * @author Timo Haeckel
+	 *
+	 */
 	public enum EventType {
 		BROADCAST
 	}
 
+	/**
+	 * Event data
+	 */
 	public final EventType eventType;
 	public final ID source;
 	public final ID target; 

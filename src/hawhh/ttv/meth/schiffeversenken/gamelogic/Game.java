@@ -11,15 +11,25 @@ import de.uniba.wiai.lspi.chord.data.ID;
 import de.uniba.wiai.lspi.chord.data.URL;
 import de.uniba.wiai.lspi.chord.service.Chord;
 import de.uniba.wiai.lspi.chord.service.NotifyCallback;
-import de.uniba.wiai.lspi.chord.service.PropertiesLoader;
 import de.uniba.wiai.lspi.chord.service.ServiceException;
 import de.uniba.wiai.lspi.chord.service.impl.ChordImpl;
 
+/**
+ * Gameclass contains gamelogic
+ * @author Timo Haeckel
+ *
+ */
 public class Game implements NotifyCallback {
 
 	private Logger logger = Logger.getLogger(Game.class);
+	/**
+	 * Chordnode to communicate
+	 */
 	Chord chord = new ChordImpl();
 
+	/**
+	 * Chord properties 
+	 */
 	private String protocol = URL.KNOWN_PROTOCOLS.get(URL.SOCKET_PROTOCOL);
 	private String localAddress;
 	private String localPort;
@@ -32,7 +42,14 @@ public class Game implements NotifyCallback {
 
 	private boolean isStarted = false;
 	
+	/**
+	 * Playermanagement
+	 */
 	private Battleship battleship;
+	
+	/**
+	 * Our player
+	 */
 	private MyPlayer myPlayer;
 	
 	// Server Constructor
@@ -62,7 +79,7 @@ public class Game implements NotifyCallback {
 		this.isClient = isClient;
 
 		if (this.isClient) {
-			// join server
+			// join DHT
 			try {
 				chord.join(localURL, serverURL);
 			} catch (ServiceException e) {
@@ -71,9 +88,9 @@ public class Game implements NotifyCallback {
 			}
 			logger.warn("Node as Client: init done");
 		} else {
-			// create server
+			// create DHT
 			try {
-				chord.create(localURL);
+				chord.create(serverURL);
 			} catch (ServiceException e) {
 				throw new RuntimeException(
 						"Game as Server: Could not create the DHT !", e);
@@ -85,6 +102,7 @@ public class Game implements NotifyCallback {
 	@Override
 	public void retrieved(ID target) {
 		if(!isStarted) {
+			//if game not startet, start
 			isStarted = startGame();
 		}
 		boolean hit = false;
@@ -93,35 +111,45 @@ public class Game implements NotifyCallback {
 			hit = myPlayer.checkHit(target);
 		}
 		
-		broadcastAndShoot(target, hit);
+		//start aychron broadcast to shoot
+		new Thread(new AsyncBroadcast(chord,target,hit, battleship, logger)).start();
 		
+		//print our player 
 		myPlayer.print();
 		
+		//print all enemies
 		for (EnemyPlayer e: battleship.getEnemies()) {
 			e.print();
 		}
 		
 	}
 
-	private void broadcastAndShoot(ID target, boolean hit) {
-		new Thread(new AsyncBroadcast(chord,target,hit, battleship, logger)).start();			
-	}
-
+	/**
+	 * starting a new game
+	 * @return true
+	 */
 	public boolean startGame() {
+		//check if already started
 		if(isStarted){
 			return true;
 		}
+		//get start id (predecessor +1)
 		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger()
 				.add(BigInteger.valueOf(1)));
-		logger.warn("start id: " + start.toDecimalString());
+		logger.warn("start id: " + start.toHexString());
+		//get end id
 		ID end = chord.getID();
-		logger.warn("end id: " + end.toDecimalString());
+		logger.warn("end id: " + end.toHexString());
+		
+		//create our player
 		myPlayer = new MyPlayer(start, end);
 		logger.warn(myPlayer);
 		
+		//create playermanagement
 		battleship = new Battleship(myPlayer);
 		isStarted = true;
 		
+		//if we are the max ID shoot
 		if (myPlayer.hasMaxID()) {
 			logger.warn(chord.getID() + " has 2^160-1");
 			JOptionPane.showInputDialog("START!");
@@ -131,6 +159,10 @@ public class Game implements NotifyCallback {
 		return true;
 	}
 
+	/**
+	 * get chordid 
+	 * @return
+	 */
 	public String getChordId() {
 		return chord.getID().toString();
 	}

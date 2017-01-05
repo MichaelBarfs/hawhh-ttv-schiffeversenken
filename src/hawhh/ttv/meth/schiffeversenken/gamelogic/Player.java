@@ -7,6 +7,11 @@ import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
+/**
+ * main class containing funktionality for players
+ * @author Timo Haeckel
+ *
+ */
 public abstract class Player implements Comparable<Player> {
 
 	// my ids start and end of interval
@@ -29,12 +34,12 @@ public abstract class Player implements Comparable<Player> {
 	public Player(ID startId, ID endId) {
 		this.startId = startId;
 		this.endId = endId;
-
+		
 		initSectors();
 	}
 
 	public void print() {
-		Logger.getLogger(Player.class).debug("Player: " + this.toString());
+		Logger.getLogger(Player.class).info("Player: " + this.toString());
 	}
 
 	public ID getStartId() {
@@ -53,12 +58,22 @@ public abstract class Player implements Comparable<Player> {
 		return shipCount;
 	}
 	
+	/**
+	 * check if id is in interval of player
+	 * @param id
+	 * @return
+	 */
 	public boolean containsID(ID id) {
 		ID s = ID.valueOf(getStartId().toBigInteger().subtract(BigInteger.valueOf(1)));
 		ID e = ID.valueOf(getEndId().toBigInteger().add(BigInteger.valueOf(1)));
 		return id.isInInterval(s, e);
 	}
 	
+	/**
+	 * check if id has a sector
+	 * @param id
+	 * @return the sector for the given id
+	 */
 	protected Sector getContainingSector(ID id) {
 		for (Sector sector : sectors) {
 			ID s = ID.valueOf(sector.getStartId().toBigInteger().subtract(
@@ -121,6 +136,7 @@ public abstract class Player implements Comparable<Player> {
 		BigInteger totalSize = getIntervalSize();
 		BigInteger sectorSize = totalSize.divide(BigInteger.valueOf(INTERVAL_LENGTH));
 		
+		//set sectorsize and add sector to list
 		for(int i = 0; i < INTERVAL_LENGTH; i++){
 			BigInteger offset = sectorSize.multiply(BigInteger.valueOf(i));
 			ID start = ID.valueOf(getStartId().toBigInteger().add(offset));

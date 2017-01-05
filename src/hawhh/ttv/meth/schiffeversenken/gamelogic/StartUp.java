@@ -5,15 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 
+/**
+ * startup class set up game
+ * @author Timo Haeckel
+ *
+ */
 public class StartUp {
 	private static Logger log = Logger.getLogger(StartUp.class);
+	
+	/**
+	 * List if multiple nodes in one execution environment
+	 */
 	private List<Game> nodes = new ArrayList<>();
 
-	public static boolean go = false;
-	
-	
 	public StartUp(String localAddress, String localPort, String serverAddress,
 			String serverPort, int nodeCount, boolean isServer) throws MalformedURLException{
 		if(isServer){
@@ -23,6 +28,7 @@ public class StartUp {
 			nodes.add(server);
 		}
 		log.warn("Starting additional " + nodeCount + " nodes.");
+		//start nodes 
 		for (int i = 0; i < nodeCount; i++) {
 			int portNumber = Integer.parseInt(localPort) + i;
 			String port = "" + portNumber;
@@ -42,6 +48,9 @@ public class StartUp {
 		return ret;
 	}
 	
+	/**
+	 * Start game countdown and start all nodes 
+	 */
 	public void startGame() {
 		log.warn("starting Game in");
 

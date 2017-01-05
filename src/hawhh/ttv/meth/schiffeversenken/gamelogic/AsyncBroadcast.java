@@ -6,8 +6,16 @@ import de.uniba.wiai.lspi.chord.data.ID;
 import de.uniba.wiai.lspi.chord.service.Chord;
 import de.uniba.wiai.lspi.chord.service.ServiceException;
 
+/**
+ * Thread to broadcast and shoot asynchron.
+ * @author Timo Haeckel
+ *
+ */
 public class AsyncBroadcast implements Runnable {
 
+	/**
+	 * Data Storage for thread.
+	 */
 	private Chord chord;
 	private ID target;
 	private boolean hit;
@@ -25,13 +33,18 @@ public class AsyncBroadcast implements Runnable {
 	@Override
 	public void run() {
 		
+		//check if there was a target.
+		//if null it is the first run and we start the game
 		if(target != null){
+			//its not the first run so broadcast where and if we were hit.
 			chord.broadcast(target, hit);
 		}
 		
+		//get the next target id to shoot
 		ID target = battleship.getNextTarget();
 		
 		try {
+			//shoot!
 			chord.retrieve(target);
 		} catch (ServiceException e) {
 			logger.fatal(e);
