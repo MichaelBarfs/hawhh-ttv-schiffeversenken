@@ -46,6 +46,27 @@ public class EnemyPlayer extends Player {
 			return null;
 		}
 		//search for a sector which not has been hit yet
+		for (int i = 0; i < 4; i++) {
+			if(i==3){
+				//search random sector that has not been hit yet.
+				int random = 0;
+				do {
+					random = (int) (Math.random() * sectors.size());
+				}while(sectors.get(random).isHit());
+				
+				return sectors.get(random).getEndId();
+				
+			} else if(!sectors.get(i).isHit()){
+				return sectors.get(i).getEndId();
+				
+			} else if(!sectors.get(sectors.size()-(i+1)).isHit()){
+				return sectors.get(sectors.size()-(i+1)).getEndId();
+				
+			} else if(!sectors.get(sectors.size()/2-(i)).isHit()){
+				return sectors.get(sectors.size()/2-(i)).getEndId();
+			} 
+		}
+		//shoot from first to last sector
 		for (Sector sector : sectors) {
 			if(!sector.isHit()){
 				return sector.getEndId();

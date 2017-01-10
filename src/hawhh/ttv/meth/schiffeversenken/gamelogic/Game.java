@@ -21,6 +21,7 @@ import de.uniba.wiai.lspi.chord.service.impl.ChordImpl;
  */
 public class Game implements NotifyCallback {
 
+	public static boolean locked = false;
 	private Logger logger = Logger.getLogger(Game.class);
 	/**
 	 * Chordnode to communicate
@@ -101,6 +102,9 @@ public class Game implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
+		while(locked){
+			
+		}
 		if(!isStarted) {
 			//if game not startet, start
 			isStarted = startGame();
@@ -169,6 +173,9 @@ public class Game implements NotifyCallback {
 	
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit) {
+		while(locked){
+			
+		}
 		// save this to history!
 		battleship.notify(GameEvent.EventType.BROADCAST, source, target, hit, TransactionHelper.transactionNumber);
 		if (hit) {

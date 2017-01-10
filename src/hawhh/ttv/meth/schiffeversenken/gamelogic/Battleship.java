@@ -84,7 +84,7 @@ public class Battleship {
 		
 		// if no target id given the enemy is allready dead.
 		if(target == null){
-			log.warn("#####" + weakest.getEndId() + " is allready dead!");
+			log.warn("#####" + weakest.getEndId().toHexString() + " is allready dead!");
 			target = weakest.getEndId();
 			try {
 				Thread.sleep(10000);
@@ -140,9 +140,10 @@ public class Battleship {
 				if(isTarget){
 					//check if he is dead now
 					if(enemyPlayer.getShipCount() <= 1){
+						Game.locked = true;
 						//WE ARE THE WINNER YEEEAAAH
-						log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
-						JOptionPane.showInputDialog("WINNER!!! " + enemyPlayer.getEndId() + " is dead!");
+						log.warn("##### " + enemyPlayer.getEndId().toHexString() + " is dead!");
+						JOptionPane.showInputDialog("WINNER!!! " + enemyPlayer.getEndId().toHexString() + " is dead!");
 					}
 				}
 			}
@@ -155,6 +156,14 @@ public class Battleship {
 		addEnemy(source);
 		//check if all enemies are still alive
 		checkEnemiesAlive();
+		if(hit){
+			for (EnemyPlayer enemyPlayer : enemies) {
+				boolean isTarget = enemyPlayer.containsID(lastTarget);
+				if(isTarget){
+					log.warn(enemyPlayer.toString());
+				}
+			}
+		}
 	}
 
 	/**
@@ -163,7 +172,7 @@ public class Battleship {
 	private void checkEnemiesAlive() {
 		for (EnemyPlayer enemyPlayer : enemies) {
 			if(!enemyPlayer.isAlive()){
-				log.warn("##### " + enemyPlayer.getEndId() + " is dead!");
+				log.warn("##### " + enemyPlayer.getEndId().toHexString() + " is dead!");
 			}
 		}
 		

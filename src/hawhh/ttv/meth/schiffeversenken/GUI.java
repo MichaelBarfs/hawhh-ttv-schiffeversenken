@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -104,6 +105,9 @@ public class GUI extends JFrame {
 					
 					//startup finished set green
 					coapHelper.setLED(Color.GREEN);
+					
+					//wait for all parts to be ready.
+					JOptionPane.showInputDialog("GO?!");
 					
 					//gogogo
 					starter.startGame();

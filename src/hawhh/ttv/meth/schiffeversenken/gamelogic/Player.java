@@ -64,6 +64,9 @@ public abstract class Player implements Comparable<Player> {
 	 * @return
 	 */
 	public boolean containsID(ID id) {
+		if(id == null){
+			return false;
+		}
 		ID s = ID.valueOf(getStartId().toBigInteger().subtract(BigInteger.valueOf(1)));
 		ID e = ID.valueOf(getEndId().toBigInteger().add(BigInteger.valueOf(1)));
 		return id.isInInterval(s, e);

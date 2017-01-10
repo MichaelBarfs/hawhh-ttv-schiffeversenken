@@ -42,7 +42,6 @@ public class AsyncBroadcast implements Runnable {
 		
 		//get the next target id to shoot
 		ID target = battleship.getNextTarget();
-		
 		try {
 			//shoot!
 			chord.retrieve(target);

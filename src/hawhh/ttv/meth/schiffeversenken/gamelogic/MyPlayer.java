@@ -47,7 +47,10 @@ public class MyPlayer extends Player {
 	 * fill the ship list SHIP_COUNT ships at random ship positions.
 	 */
 	private void fillShips() {
-		for (int i = 0; i < SHIP_COUNT; i++) {
+		sectors.get(0).setShip(true);
+		sectors.get(INTERVAL_LENGTH-1).setShip(true);
+		sectors.get(INTERVAL_LENGTH/2).setShip(true);
+		for (int i = 0; i < SHIP_COUNT-3; i++) {
 			//get Random position
 			int random = 0;
 			do {
@@ -87,7 +90,7 @@ public class MyPlayer extends Player {
 		}
 		//set sector has been hit
 		sector.setHit(true);
-		
+		logger.warn(this.toString());
 		return ret;
 	}
 
