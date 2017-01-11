@@ -20,7 +20,7 @@ public class EnemyPlayer extends Player {
 	 * Apply game event to enemyPlayer.
 	 * @param event
 	 */
-	public void checkHit (GameEvent event){
+	public synchronized void checkHit (GameEvent event){
 		//check if target in sectors
 		Sector sector = getContainingSector(event.target);
 		if(sector == null){
@@ -40,7 +40,7 @@ public class EnemyPlayer extends Player {
 	 * check all sectors and return target id to shoot next.
 	 * @return target id. Null if no target left.
 	 */
-	public ID getNextTargetID() {
+	public synchronized ID getNextTargetID() {
 		//check if player still have ships left
 		if(shipCount <= 0){
 			return null;

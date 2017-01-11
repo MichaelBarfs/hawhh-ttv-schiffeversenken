@@ -38,23 +38,23 @@ public abstract class Player implements Comparable<Player> {
 		initSectors();
 	}
 
-	public void print() {
+	public synchronized void print() {
 		Logger.getLogger(Player.class).info("Player: " + this.toString());
 	}
 
-	public ID getStartId() {
+	public synchronized ID getStartId() {
 		return startId;
 	}
 
-	public ID getEndId() {
+	public synchronized ID getEndId() {
 		return endId;
 	}
 
-	public boolean hasShips() {
+	public synchronized boolean hasShips() {
 		return shipCount > 0;
 	}
 
-	public int getShipCount() {
+	public synchronized int getShipCount() {
 		return shipCount;
 	}
 	
@@ -63,7 +63,7 @@ public abstract class Player implements Comparable<Player> {
 	 * @param id
 	 * @return
 	 */
-	public boolean containsID(ID id) {
+	public synchronized boolean containsID(ID id) {
 		if(id == null){
 			return false;
 		}
@@ -77,7 +77,7 @@ public abstract class Player implements Comparable<Player> {
 	 * @param id
 	 * @return the sector for the given id
 	 */
-	protected Sector getContainingSector(ID id) {
+	protected synchronized Sector getContainingSector(ID id) {
 		for (Sector sector : sectors) {
 			ID s = ID.valueOf(sector.getStartId().toBigInteger().subtract(
 					BigInteger.valueOf(1)));
@@ -91,11 +91,11 @@ public abstract class Player implements Comparable<Player> {
 	}
 	
 	// Check if this Player should start.
-	public boolean hasMaxID() {
+	public synchronized boolean hasMaxID() {
 		return getContainingSector(ID.valueOf(chordMax)) != null;
 	}
 	
-	protected BigInteger getIntervalSize() {
+	protected synchronized BigInteger getIntervalSize() {
 		return getEndId().toBigInteger().add(getStartId().toBigInteger().negate())
 				.mod(chordMax);
 	}
@@ -134,7 +134,7 @@ public abstract class Player implements Comparable<Player> {
 	/**
 	 * Initializes the Sectors for a start id and end id and the given length. 
 	 */
-	private void initSectors() {
+	private synchronized void initSectors() {
 		// get total size
 		BigInteger totalSize = getIntervalSize();
 		BigInteger sectorSize = totalSize.divide(BigInteger.valueOf(INTERVAL_LENGTH));
@@ -149,7 +149,7 @@ public abstract class Player implements Comparable<Player> {
 		
 	}
 
-	public boolean isAlive() {
+	public synchronized boolean isAlive() {
 		return shipCount>0;
 	}
 }

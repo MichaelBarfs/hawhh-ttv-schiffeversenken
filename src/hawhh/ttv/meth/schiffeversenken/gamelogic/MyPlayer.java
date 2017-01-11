@@ -26,7 +26,7 @@ public class MyPlayer extends Player {
 	 * set shipcount and paint LED 
 	 * @param shipCount
 	 */
-	private void setShipCount(int shipCount) {
+	private synchronized void setShipCount(int shipCount) {
 		this.shipCount = shipCount;
 		if(shipCount == SHIP_COUNT){
 			//LED green
@@ -46,7 +46,7 @@ public class MyPlayer extends Player {
 	/**
 	 * fill the ship list SHIP_COUNT ships at random ship positions.
 	 */
-	private void fillShips() {
+	private synchronized void fillShips() {
 		sectors.get(0).setShip(true);
 		sectors.get(INTERVAL_LENGTH-1).setShip(true);
 		sectors.get(INTERVAL_LENGTH/2).setShip(true);
@@ -67,7 +67,7 @@ public class MyPlayer extends Player {
 	 * @param target	the id that was shot at.
 	 * @return
 	 */
-	public boolean checkHit(ID target) {
+	public synchronized boolean checkHit(ID target) {
 		boolean ret = false;
 		//check contain the target id
 		Sector sector = getContainingSector(target);
