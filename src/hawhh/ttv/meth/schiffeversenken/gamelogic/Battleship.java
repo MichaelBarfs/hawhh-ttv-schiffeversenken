@@ -62,7 +62,7 @@ public class Battleship {
 	 * Get next target to shoot at.
 	 * @return target id
 	 */
-	public synchronized ID getNextTarget() {
+	public ID getNextTarget() {
 
 		ID target = null;
 		
@@ -74,14 +74,18 @@ public class Battleship {
 		//detect weakest target
 		EnemyPlayer weakest = enemies.get(0);
 		for (EnemyPlayer enemyPlayer : enemies) {
-			if(enemyPlayer.getShipCount() < weakest.getShipCount()){
+			if(weakest.getShipCount() <= 0){
+				log.warn("#####" + weakest.getEndId().toHexString() + " is allready dead!");
+				weakest = enemyPlayer;
+			} if(enemyPlayer.getShipCount() < weakest.getShipCount()){
 				weakest = enemyPlayer;
 			}
+			
 		}
+	
 		
-		//get target id to shoot at weakest target.
 		target = weakest.getNextTargetID();
-		
+	
 		// if no target id given the enemy is allready dead.
 		if(target == null){
 			log.warn("#####" + weakest.getEndId().toHexString() + " is allready dead!");
@@ -103,7 +107,7 @@ public class Battleship {
 	 * Calculate a random target that is not in my players range.
 	 * @return
 	 */
-	private synchronized ID getRandomTarget() {
+	private ID getRandomTarget() {
 		Random rnd = new Random();
 		ID id = null;
 		do {
@@ -114,7 +118,7 @@ public class Battleship {
 	}
 
 	//get all known enemies
-	public synchronized List<EnemyPlayer> getEnemies() {
+	public List<EnemyPlayer> getEnemies() {
 		return enemies;
 	}
 
@@ -126,7 +130,7 @@ public class Battleship {
 	 * @param hit		information if a ship was hit or not
 	 * @param transactionNumber		transaction number of the event.
 	 */
-	public synchronized void notify(GameEvent.EventType event, ID source, ID target, Boolean hit,
+	public void notify(GameEvent.EventType event, ID source, ID target, Boolean hit,
 			int transactionNumber) {
 		
 		//check winning condition!
@@ -142,8 +146,8 @@ public class Battleship {
 					if(enemyPlayer.getShipCount() <= 1){
 						Game.locked = true;
 						//WE ARE THE WINNER YEEEAAAH
-						log.warn("##### " + enemyPlayer.getEndId().toHexString() + " is dead!");
-						JOptionPane.showInputDialog("WINNER!!! " + enemyPlayer.getEndId().toHexString() + " is dead!");
+						log.warn("##### " + enemyPlayer.getEndId().toHexString() + " is dead! (" + transactionNumber + ")");
+						JOptionPane.showInputDialog("WINNER!!! " + enemyPlayer.getEndId().toHexString() + " is dead! (" + transactionNumber + ")");
 					}
 				}
 			}
@@ -169,13 +173,12 @@ public class Battleship {
 	/**
 	 * Check if all enemies alive.
 	 */
-	private synchronized void checkEnemiesAlive() {
+	private void checkEnemiesAlive() {
 		for (EnemyPlayer enemyPlayer : enemies) {
 			if(!enemyPlayer.isAlive()){
 				log.warn("##### " + enemyPlayer.getEndId().toHexString() + " is dead!");
 			}
 		}
-		
 	}
 
 	
@@ -183,7 +186,7 @@ public class Battleship {
 	 * Add an enemy at the given id.
 	 * @param source 	enemy id
 	 */
-	private synchronized void addEnemy(ID source) {
+	private void addEnemy(ID source) {
 		//add all enemies except our own id.
 		if(!source.equals(ownID)) {
 			enemyIDs.add(source);
@@ -195,7 +198,7 @@ public class Battleship {
 	/**
 	 * Update enemies.
 	 */
-	private synchronized void updateEnemies() {
+	private   void updateEnemies() {
 		//get sorted ids
 		List<ID> sortedIds = getEnemyIds();
 		//add our own
@@ -231,7 +234,7 @@ public class Battleship {
 	/**
 	 * Get a sorted list of all known enemy ids.
 	 */
-	public synchronized List<ID> getEnemyIds() {
+	public List<ID> getEnemyIds() {
 		List<ID> ret = new ArrayList<ID>();
 		ret.addAll(enemyIDs);
 		Collections.sort(ret);

@@ -20,10 +20,14 @@ public class EnemyPlayer extends Player {
 	 * Apply game event to enemyPlayer.
 	 * @param event
 	 */
-	public synchronized void checkHit (GameEvent event){
+	public void checkHit (GameEvent event){
 		//check if target in sectors
 		Sector sector = getContainingSector(event.target);
 		if(sector == null){
+			return;
+		}
+		if(sector.isHit()){
+			logger.info("Enemy " + getEndId().toHexString() + " hit twice at " + (SHIP_COUNT - shipCount) + " recognized at " + event.target.toHexString() + ".");
 			return;
 		}
 		//apply event to enemy data
@@ -40,7 +44,7 @@ public class EnemyPlayer extends Player {
 	 * check all sectors and return target id to shoot next.
 	 * @return target id. Null if no target left.
 	 */
-	public synchronized ID getNextTargetID() {
+	public ID getNextTargetID() {
 		//check if player still have ships left
 		if(shipCount <= 0){
 			return null;

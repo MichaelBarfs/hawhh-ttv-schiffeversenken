@@ -53,16 +53,6 @@ public class StartUp {
 	 */
 	public void startGame() {
 		log.warn("starting Game in");
-
-		try {
-			//Count Down before game start.
-			for (int i = 3; i > 0; i--) {
-				log.warn(i);
-				Thread.sleep(1000);
-			}
-		} catch (InterruptedException e) {
-			log.fatal(e);
-		}
 		
 		for (Game node : nodes) {
 			node.startGame();
